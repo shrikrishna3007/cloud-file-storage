@@ -4,6 +4,7 @@ import com.project.cloudfilestorage.exception.BadRequestException;
 import com.project.cloudfilestorage.exception.FileOperationException;
 import com.project.cloudfilestorage.exception.FilesNotFoundException;
 import com.project.cloudfilestorage.service.FileService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -17,10 +18,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class FileServiceImpl implements FileService {
-    private final S3Client s3Client;
-    @SuppressWarnings("SpellCheckingInspection")
-    private static final String BUCKET_NAME = "cloud-filestorage";
+    @Value("${s3.bucket.name}")
+    private String bucketName;
 
+    private final S3Client s3Client;
     public FileServiceImpl(S3Client s3Client) {
         this.s3Client = s3Client;
     }
@@ -34,7 +35,7 @@ public class FileServiceImpl implements FileService {
             throw new BadRequestException("Invalid userName or fileName");
         }
         ListObjectsV2Request request = ListObjectsV2Request.builder()
-                .bucket(BUCKET_NAME)
+                .bucket(bucketName)
                 .prefix(userName + "/")
                 .build();
 
@@ -70,7 +71,7 @@ public class FileServiceImpl implements FileService {
             String key = userName + "/" + file.getOriginalFilename();
 
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(BUCKET_NAME)
+                    .bucket(bucketName)
                     .key(key)
                     .contentType(file.getContentType())
                     .build();
@@ -93,7 +94,7 @@ public class FileServiceImpl implements FileService {
         String key = userName + "/" + fileName;
 
         GetObjectRequest request = GetObjectRequest.builder()
-                .bucket(BUCKET_NAME)
+                .bucket(bucketName)
                 .key(key)
                 .build();
         try{
