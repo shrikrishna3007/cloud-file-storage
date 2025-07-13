@@ -1,0 +1,10 @@
+package com.project.cloudfilestorage.exception;
+
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus()
+public class MissingServletRequestParameterException extends RuntimeException{
+    public MissingServletRequestParameterException(String message) {
+        super(message);
+    }
+}
