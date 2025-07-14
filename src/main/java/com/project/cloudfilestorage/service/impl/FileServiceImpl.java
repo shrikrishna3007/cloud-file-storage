@@ -30,7 +30,7 @@ public class FileServiceImpl implements FileService {
     Search file in S3 bucket. Validate username and file name. If Found then give success response. If not then throw exception.
      */
     @Override
-    public List<String> searchFile(String userName, String fileName) {
+    public List<String> searchFiles(String userName, String fileName) {
         if (isInValid(userName) || isInValid(fileName)) {
             throw new BadRequestException("Invalid userName or fileName");
         }
@@ -56,7 +56,7 @@ public class FileServiceImpl implements FileService {
     Helper method to validate username and file name.
      */
     private boolean isInValid(String data) {
-        return data == null || data.trim().isEmpty() || "null".equalsIgnoreCase(data);
+        return data == null || data.trim().isEmpty();
     }
 
     /*
